@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Velocity.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.min.js"></script>
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Borel&family=Poppins:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @font-face {
+            /*-----Description-----*/
+            font-family: 'san';
+            src: url('Fonts/sangyo-font/SangyoItalic-OGy0O.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            /*-----sketchten-----*/
+            font-family: 'super';
+            src: url('Fonts/super-brigade-font/SuperBrigadeItalic-G3Kxm.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'FB';
+            src: url('Fonts/AgencyFB-Bold/AgencyFB-Bold.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* ================= RESET ================= */
+        * {
+            cursor: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ================= THEME VARIABLES ================= */
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --card-bg: rgba(0, 0, 0, 0.15);
+            --section-bg: #0a0a0a;
+        }
+
+        body.light {
+            --bg: #ffffff;
+            --text: #000000;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --section-bg: #f5f5f5;
+        }
+
+        /* ================= GLOBAL BODY ================= */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #000;
+            position: relative;
+        }
+
+        /* Paper Texture Layer */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background-image: url("Other/Paper Texture.jpg");
+            background-repeat: repeat;
+            /* IMPORTANT */
+            background-size: auto;
+            /* don't use cover for texture */
+
+            filter: invert(1) brightness(0.7);
+            /* makes white texture black */
+            opacity: 0.6;
+            /* change to 0.5 if needed */
+
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Make sure content stays above texture */
+        body>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 25px;
+            cursor: pointer;
+            font-family: 'FB', sans-serif;
+        }
+
+
+        /*-------------Cursor effect-----------------*/
+        .circle {
+            --circle-size: 55px;
+            position: fixed;
+            height: var(--circle-size);
+            width: var(--circle-size);
+            border: 1px;
+            box-shadow: 0px 0px 40px #ff0800;
+            border-radius: 100%;
+            top: calc(var(--circle-size) / 4 * -1);
+            left: calc(var(--circle-size) / 4 * -1);
+            pointer-events: none;
+            background-color: #fff;
+            z-index: 15;
+            transform: scale(1.05);
+        }
+
+        .circle:hover {
+            transform: scale(1.2);
+        }
+
+        /* background video (fades when horizontal section active) */
+        .bg-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -3;
+            filter: contrast(1.2) brightness(0.55) saturate(1.1);
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000000;
+            z-index: 9999;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fade {
+            0% {
+                opacity: 10;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 10;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .loading-logo {
+            rotate: 45deg;
+            width: 190px;
+            filter: brightness(0) saturate(100%) invert(17%) sepia(98%) saturate(7485%) hue-rotate(358deg) brightness(98%) contrast(113%);
+            animation: fade 10s infinite;
+        }
+
+
+
+        /* simplified page chrome (kept minimal, unchanged visually) */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            z-index: 100;
+        }
+
+        /* =====================================================
+           RESPONSIVE SYSTEM — All Breakpoints
+           1440px  Laptop/Large Desktop
+           1024px  Small Laptop / Large Tablet
+            768px  Tablet / Phablet
+            480px  Mobile
+           ===================================================== */
+
+        /* ---------- Navbar ---------- */
+        @media (max-width: 1024px) {
+            .navbar {
+                width: 92%;
+                top: 16px;
+                padding: 9px 14px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .nav-btn {
+                padding: 7px 22px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                width: 95%;
+                top: 14px;
+                padding: 8px 12px;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .contact-btn {
+                padding: 6px 14px;
+                font-size: 13px;
+            }
+
+            .nav-btn {
+                padding: 6px 18px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                width: 97%;
+                top: 10px;
+                padding: 6px 10px;
+            }
+
+            .logo {
+                font-size: 15px;
+            }
+
+            .contact-btn {
+                padding: 5px 11px;
+                font-size: 12px;
+                margin: 4px;
+            }
+
+            .nav-btn {
+                padding: 5px 14px;
+                font-size: 0.85rem;
+            }
+        }
+
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 28px;
+            border-radius: 40px;
+            border: 1.5px solid #f8f8f4;
+            background: linear-gradient(180deg, #4f0000 0.1%, #be0000 10%, #df0000 100%);
+            color: white;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.4),
+                0 2px 4px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #ff1e1e;
+            border-color: #ff1e1e;
+            box-shadow: 0 0 20px #ff1e1e55;
+        }
+
+        /* ================= HERO SECTION (Responsive) ================= */
+        .hero {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 0 5vw;
+            z-index: 5;
+        }
+
+
+
+        /* Hero content area — holds image + marquee overlapping */
+        .hero-content {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Hero image container — sits ON TOP of marquee */
+        .hero-image-container {
+            position: relative;
+            width: clamp(320px, 42vw, 620px);
+            aspect-ratio: 1 / 1.05;
+            z-index: 5;
+            overflow: visible;
+        }
+
+        /* Marquee sits BEHIND the image */
+        .marquee-wrap {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            margin-top: clamp(-80px, -10vw, -120px);
+            z-index: 2;
+        }
+
+        .marquee {
+            display: inline-flex;
+            gap: clamp(30px, 5vw, 80px);
+            white-space: nowrap;
+            align-items: center;
+            will-change: transform;
+        }
+
+        .mtext {
+            font-family: 'super', sans-serif;
+            font-weight: 900;
+            font-size: clamp(3rem, 12vw, 9rem);
+            letter-spacing: clamp(2px, 1vw, 8px);
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.509);
+            user-select: none;
+        }
+
+        .explore {
+            font-family: "Bebas Neue", sans-serif;
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .explore h2 {
+            font-size: 2.4rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        /* ---------- Hero Section Breakpoints ---------- */
+
+        /* Large Desktop (1440px+) */
+        @media (min-width: 1440px) {
+            .hero-image-container {
+                width: clamp(580px, 40vw, 700px);
+            }
+        }
+
+        /* --- Laptop / Large Tablet (≤1024px) --- */
+        @media (max-width: 1024px) {
+            .hero {
+                padding: 0 4vw;
+            }
+
+            .hero-image-container {
+                width: clamp(260px, 50vw, 480px);
+            }
+
+            .mtext {
+                font-size: clamp(2.5rem, 10vw, 7rem);
+            }
+        }
+
+        /* --- Tablet / Phablet (≤768px) --- */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 90px 4vw 50px;
+                min-height: 100dvh;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 0;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero-image-container {
+                width: clamp(220px, 72vw, 370px);
+            }
+
+
+
+            .marquee-wrap {
+                margin-top: clamp(-50px, -8vw, -65px);
+            }
+
+            .mtext {
+                font-size: clamp(2.2rem, 9vw, 4.5rem);
+            }
+
+            .explore h2 {
+                font-size: 1.7rem;
+            }
+        }
+
+        /* --- Mobile (≤480px) --- */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 75px 2vw 30px;
+                min-height: 100dvh;
+            }
+
+            .hero-image-container {
+                width: clamp(190px, 80vw, 290px);
+            }
+
+
+
+
+            .marquee-wrap {
+                margin-top: clamp(-30px, -6vw, -40px);
+            }
+
+            .mtext {
+                font-size: clamp(1.8rem, 8vw, 2.8rem);
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+            }
+
+            .explore h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* --- Small Mobile (≤360px) --- */
+        @media (max-width: 360px) {
+            .hero-image-container {
+                width: clamp(160px, 78vw, 240px);
+            }
+
+            .mtext {
+                font-size: clamp(1.5rem, 7vw, 2.2rem);
+            }
+        }
+
+        /* === INSTAGRAM ICON === */
+        .bottom-section {
+            z-index: 6;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            opacity: 0;
+            margin-top: 200px;
+            top: 100%;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 50px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            transition: 0.3s ease;
+            cursor: pointer;
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        .social-icon:hover {
+            background: #ff2c2c;
+            border-color: #ff2c2c;
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(255, 44, 44, 0.6);
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(255, 44, 44, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(255, 44, 44, 0.7);
+            }
+        }
+
+        /* === General Section Wrapper === */
+        .center-wrapper1,
+        .center-wrapper2,
+        .center-wrapper3 {
+            min-height: 350px;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            padding: 0 20px;
+        }
+
+        /* === Common Card Style === */
+        .mask-card1,
+        .mask-card2,
+        .mask-card3 {
+            z-index: 8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 16px;
+            max-width: 1000px;
+            width: 100%;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+        }
+
+        /* ---------- Mask / Skill Cards ---------- */
+        @media (max-width: 1024px) {
+
+            .mask-card1,
+            .mask-card2,
+            .mask-card3 {
+                padding: 25px 20px;
+            }
+
+            .mask-text1 h1,
+            .mask-text2 h1,
+            .mask-text3 h1 {
+                font-size: 32px;
+            }
+
+            .mask-text1 h1 span,
+            .mask-text2 h1 span,
+            .mask-text3 h1 span {
+                font-size: 28px;
+            }
+
+            .mask-text1 h4,
+            .mask-text2 h4,
+            .mask-text3 h4 {
+                font-size: 18px;
+            }
+
+            .desc1,
+            .desc2,
+            .desc3 {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .mask-card1,
+            .mask-card2,
+            .mask-card3 {
+                flex-direction: column !important;
+                padding: 30px 20px;
+                text-align: center;
+            }
+
+            .mask-text1,
+            .mask-text2,
+            .mask-text3 {
+                width: 100% !important;
+                padding: 0 !important;
+                margin-bottom: 20px;
+            }
+
+            .mask-image1,
+            .mask-image2,
+            .mask-image3 {
+                width: 55% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .center-wrapper1,
+            .center-wrapper2,
+            .center-wrapper3 {
+                min-height: auto;
+                margin: 16px 0;
+                padding: 0 10px;
+            }
+
+            .mask-card1,
+            .mask-card2,
+            .mask-card3 {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+
+            .mask-text1 h1,
+            .mask-text2 h1,
+            .mask-text3 h1 {
+                font-size: 22px;
+            }
+
+            .mask-text1 h1 span,
+            .mask-text2 h1 span,
+            .mask-text3 h1 span {
+                font-size: 18px;
+            }
+
+            .mask-text1 h4,
+            .mask-text2 h4,
+            .mask-text3 h4 {
+                font-size: 15px;
+            }
+
+            .desc1,
+            .desc2,
+            .desc3 {
+                font-size: 15px;
+                line-height: 1.5;
+            }
+
+            .mask-image1,
+            .mask-image2,
+            .mask-image3 {
+                width: 78% !important;
+            }
+        }
+
+        /* === Text Side === */
+        .mask-text1,
+        .mask-text2,
+        .mask-text3 {
+            font-family: "san", sans-serif;
+            width: 60%;
+            padding-right: 40px;
+        }
+
+        .mask-text1 h1,
+        .mask-text2 h1,
+        .mask-text3 h1 {
+            padding-top: 5px;
+            font-family: "FB", sans-serif;
+            color: #fff;
+            font-size: 40px;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .mask-text1 h1 span,
+        .mask-text2 h1 span,
+        .mask-text3 h1 span {
+            font-family: "san", sans-serif;
+            color: #ff0800;
+            font-weight: 600;
+            font-size: 35px;
+        }
+
+        .mask-text1 h4,
+        .mask-text2 h4,
+        .mask-text3 h4 {
+            font-family: 'FB', sans-serif;
+            color: #ff0800;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .desc1,
+        .desc2,
+        .desc3 {
+            font-family: 'FB', sans-serif;
+            color: var(--text);
+            opacity: 0.8;
+            line-height: 1.6;
+            font-size: 22px;
+        }
+
+        /* === Image Side === */
+        .mask-image1,
+        .mask-image2,
+        .mask-image3 {
+            width: 30%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mask-image1 img,
+        .mask-image3 img {
+            width: 90%;
+            border-radius: 8px;
+            filter: grayscale(30%) contrast(1.1) brightness(1.1);
+            transition: 0.4s ease;
+        }
+
+        .mask-image2 img {
+            width: 80%;
+        }
+
+        /* === Reverse layout for section 2 === */
+        .mask-card2 {
+            flex-direction: row-reverse;
+        }
+
+        .mask-text2 {
+            padding-left: 40px;
+            padding-right: 0;
+        }
+
+        /* Tease grid responsive */
+        @media (max-width: 768px) {
+            .tease-grid {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+
+        /* ---------- HORIZONTAL SECTION (FIXED) ---------- */
+        .horizontal {
+            position: relative;
+            height: 100vh;
+            background-color: #0a0a0a;
+            overflow: hidden;
+            z-index: 6;
+        }
+
+        /* pin-wrap is the pinned container that fills the viewport */
+        .pin-wrap {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* animation-wrap is the long horizontal strip that gets translated left */
+        .animation-wrap {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            /* width will be determined by content (scrollWidth) */
+            will-change: transform;
+        }
+
+        /* each panel should be full viewport width (min-width ensures that) */
+        .panel {
+            min-width: 100vw;
+            /* ENSURES exact panel width = viewport width */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* simple demo panels: solid color boxes and text/images */
+        .panel .box {
+            width: 40%;
+            height: 100%;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .panel.color-l .box {
+            font-family: "san", sans-serif;
+            background: #ffffff00;
+            box-shadow: none;
+            text-align: left;
+            color: #f8f8f4;
+        }
+
+        .panel.color-l .box h3 {
+            font-size: 1.6rem;
+            line-height: 1.7;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .panel.color-a .box {
+            background: url("Images/4.jpg") no-repeat center center / cover;
+            border: 2px solid #ff0800;
+        }
+
+        .panel.color-b .box {
+            background: url("Images/16.jpg") no-repeat center center / cover;
+            border: 2px solid #ff0800;
+        }
+
+        .panel.color-c .box {
+            background: url("Images/17.jpg") no-repeat center center / cover;
+            border: 2px solid #ff0800;
+        }
+
+        .panel.color-d .box {
+            background: url("Images/18.jpg") no-repeat center center / cover;
+            border: 2px solid #ff0800;
+        }
+
+        .panel.color-e .box {
+            background: url("Images/19.jpg") no-repeat center center / cover;
+            border: 2px solid #ff0800;
+        }
+
+        /* Helper: hide desktop line-breaks on mobile */
+        .desktop-br {
+            display: inline;
+        }
+
+        /* ---------- Horizontal Scroll Panels ---------- */
+
+        @media (max-width: 1024px) {
+            .panel .box {
+                width: 62%;
+                height: 80%;
+                font-size: 1.35rem;
+            }
+
+            .panel.color-l .box h3 {
+                font-size: 1.2rem;
+                line-height: 1.6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .panel {
+                min-width: 100vw;
+                padding: 15px;
+            }
+
+            .panel .box {
+                width: 85%;
+                height: 70%;
+                font-size: 1.15rem;
+                padding: 22px;
+            }
+
+            .panel.color-l .box h3 {
+                font-size: 1.05rem;
+                line-height: 1.6;
+            }
+
+            .desktop-br {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .panel {
+                padding: 10px;
+                height: 100vh;
+            }
+
+            .panel .box {
+                width: 92%;
+                height: auto;
+                min-height: 44%;
+                font-size: 0.95rem;
+                padding: 18px;
+                border-radius: 12px;
+            }
+
+            .panel.color-l .box {
+                text-align: center;
+            }
+
+            .panel.color-l .box h3 {
+                font-size: 0.85rem;
+                line-height: 1.65;
+            }
+        }
+
+        /* Optional: replace background color with an image */
+        .word[data-img]::before {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .word[data-img="img1"]::before {
+            background-image: url('b1.jpeg');
+            height: 120px;
+            top: -75px;
+        }
+
+        .word[data-img="img2"]::before {
+            background-image: url('b2.jpeg');
+            height: 120px;
+            top: -75px;
+        }
+
+        .word[data-img="img3"]::before {
+            background-image: url('b3.jpeg');
+            height: 120px;
+            top: -75px;
+        }
+
+        .word[data-img="img4"]::before {
+            background-image: url('b4.jpeg');
+            height: 120px;
+            top: -75px;
+        }
+
+        .word[data-img="img5"]::before {
+            background-image: url('b5.jpeg');
+            height: 120px;
+            top: -75px;
+        }
+
+        .word[data-img="img6"]::before {
+            background-image: url('b6.jpeg');
+            height: 120px;
+            top: -75px;
+        }
+
+        /* === ABOUT SECTION === */
+        .about-section {
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Left Side (Map or Image) */
+        .about-left {
+            background: #00000000;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .about-left h3 {
+            color: #fff;
+            font-family: 'Super', sans-serif;
+            font-size: 60px;
+            font-weight: 600;
+        }
+
+
+        .about-left * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /*IDEA*/
+        #sketchten-card .card {
+            width: 90%;
+            max-width: 1580px;
+            min-height: 720px;
+            height: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            border: 1px solid #464646;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* ---------- Sketchten / About Me Card ---------- */
+        @media (max-width: 1200px) {
+            #sketchten-card .card {
+                flex-direction: column;
+                min-height: auto;
+                padding: 60px 40px;
+                text-align: center;
+            }
+
+            #sketchten-card .photo-box {
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                width: 300px !important;
+                height: 300px !important;
+                margin-bottom: 40px;
+            }
+
+            #sketchten-card .right {
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                transform: none !important;
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            #sketchten-card .signature {
+                width: 400px !important;
+                bottom: -100px !important;
+                right: -50px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #sketchten-card .card {
+                padding: 40px 20px;
+            }
+
+            #sketchten-card .line1 {
+                font-size: 22px;
+            }
+
+            #sketchten-card .brand {
+                font-size: 45px !important;
+                letter-spacing: 2px;
+            }
+
+            #sketchten-card .h1 {
+                font-size: 28px !important;
+            }
+
+            #sketchten-card .h2 {
+                font-size: 22px;
+                line-height: 1.45;
+            }
+
+            #sketchten-card .lower {
+                margin-top: 20px;
+            }
+
+            #sketchten-card .photo-box {
+                width: 230px !important;
+                height: 230px !important;
+                border-radius: 55px;
+                margin-bottom: 30px;
+            }
+
+            #sketchten-card .signature {
+                width: 260px !important;
+                bottom: -65px !important;
+                right: -20px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #sketchten-card .card {
+                padding: 30px 15px;
+            }
+
+            #sketchten-card .line1 {
+                font-size: 18px;
+            }
+
+            #sketchten-card .brand {
+                font-size: 36px !important;
+                letter-spacing: 1px;
+            }
+
+            #sketchten-card .h1 {
+                font-size: 22px !important;
+            }
+
+            #sketchten-card .h2 {
+                font-size: 17px;
+                line-height: 1.45;
+            }
+
+            #sketchten-card .lower {
+                margin-top: 15px;
+            }
+
+            #sketchten-card .photo-box {
+                width: 185px !important;
+                height: 185px !important;
+                border-radius: 42px;
+                margin-bottom: 24px;
+            }
+
+            #sketchten-card .signature {
+                width: 190px !important;
+                bottom: -40px !important;
+                right: -10px !important;
+            }
+        }
+
+        #sketchten-card .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(10, 5, 5, 0.8) 80%);
+            pointer-events: none;
+        }
+
+        #sketchten-card .photo-box {
+            position: absolute;
+            left: 60px;
+            top: 70px;
+            width: 520px;
+            height: 520px;
+            background: #000;
+            border-radius: 80px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.25);
+            z-index: 2;
+            filter: grayscale(30%);
+        }
+
+        #sketchten-card .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Updated text area */
+        #sketchten-card .right {
+            position: absolute;
+            left: 680px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 520px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            z-index: 3;
+            text-align: left;
+        }
+
+        #sketchten-card .line1 {
+            color: #e21717;
+            font-weight: 900;
+            font-size: 31px;
+            font-family: 'FB', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1.1;
+            text-shadow: 0 5px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        #sketchten-card .brand {
+            font-family: 'FB', sans-serif;
+            display: block;
+            font-size: 80px;
+            margin-top: 10px;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: 5px;
+        }
+
+        #sketchten-card .lower {
+            font-family: 'FB', sans-serif;
+            margin-top: 40px;
+            /* moved slightly higher */
+        }
+
+        #sketchten-card .h1 {
+            font-size: 40px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        #sketchten-card .h2 {
+            font-size: 56px;
+            color: rgba(255, 255, 255, 0.95);
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        #sketchten-card .signature {
+            position: absolute;
+            bottom: -400px;
+            right: -50px;
+            width: 850px;
+            opacity: 0.1;
+            filter: brightness(0) invert(1);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /*----------------- MY WORK --------------------*/
+
+        /* ===== PORTFOLIO SECTION ===== */
+        .portfolio-section {
+            padding: 100px 8%;
+        }
+
+        /* ===== FILTER BUTTONS ===== */
+        #work-filters {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            margin: 5px;
+            border-radius: 30px;
+            border: 1px solid #ff0800;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-family: "FB", sans-serif;
+            letter-spacing: 1px;
+            transition: 0.3s ease;
+            font-size: 20px;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #ff0800;
+            box-shadow: 0 0 20px #ff080066;
+        }
+
+        /* ===== MASONRY LAYOUT ===== */
+        .container {
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        /* Pinterest style */
+        .grid {
+            column-count: 4;
+            column-gap: 25px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .grid {
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                column-count: 1;
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            -webkit-column-break-inside: avoid;
+            display: inline-block;
+            width: 100%;
+            break-inside: avoid;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #0a0a0a;
+            transition: 0.4s ease;
+            position: relative;
+        }
+
+        .card.hide {
+            display: none;
+        }
+
+        /* IMPORTANT: Original ratio */
+        .card img {
+            width: 100%;
+            height: auto;
+            /* keeps original ratio */
+            display: block;
+            transition: 0.5s ease;
+        }
+
+        /* Hover zoom */
+        .card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Optional overlay content */
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            opacity: 0;
+            transition: 0.4s ease;
+        }
+
+        .card:hover .card-content {
+            opacity: 1;
+        }
+
+        .card-content h3 {
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .card-content p {
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Hidden for filtering */
+        .card.hide {
+            display: none;
+        }
+
+        .card video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 16px;
+        }
+
+
+        /*-----------------Contact ME---------------------*/
+        /* Header */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            position: relative;
+        }
+
+        /* Icon Button */
+        .contact-btn {
+            padding: 10px 25px;
+            margin: 10px;
+            border-radius: 30px;
+            border: 1px solid #ff0800;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'FB', sans-serif;
+            letter-spacing: 1px;
+            font-size: 16px;
+            transition: 0.3s ease;
+        }
+
+        /* Hover Effect */
+        .contact-btn:hover {
+            background: #ff0800;
+            box-shadow: 0 0 20px #ff080066;
+        }
+
+        .contact-icon-btn img {
+            width: 22px;
+        }
+
+        .contact-icon-btn:hover {
+            background: #ff0800;
+            box-shadow: 0 0 15px #ff080066;
+        }
+
+        /* Popup Position */
+        .contact-popup {
+            position: fixed;
+            top: 80px;
+            right: 40px;
+            display: none;
+            /* IMPORTANT */
+            z-index: 9999;
+        }
+
+        .contact-popup.active {
+            display: block;
+        }
+
+
+        /* Contact Card */
+        .contact-card {
+            width: 400px;
+            max-width: 90vw;
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* (contact popup mobile overrides moved to consolidated responsive block) */
+
+        .contact-card h4 {
+            font-family: 'FB', sans-serif;
+            font-size: 27px;
+            margin-bottom: 10px;
+        }
+
+        .email {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .email a {
+            font-family: 'FB', sans-serif;
+            font-size: 23px;
+        }
+
+        .contact-card h5 {
+            font-family: 'FB', sans-serif;
+            font-size: 27px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .email-link {
+            color: #ff0800;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Social icon styling */
+        .socials img {
+            width: 30px;
+            height: 30px;
+            padding-right: 4px;
+            filter: brightness(0) saturate(100%) invert(17%) sepia(98%) saturate(7485%) hue-rotate(358deg) brightness(98%) contrast(113%);
+            transition: 0.3s ease;
+        }
+
+        .socials img:hover {
+            transform: scale(1.2);
+        }
+
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== MEDIA MODAL ===== */
+        .media-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            padding: 30px;
+        }
+
+        .media-modal.active {
+            display: flex;
+        }
+
+        .media-wrapper {
+            max-width: 95%;
+            max-height: 95%;
+        }
+
+        #modalImg,
+        #modalVid {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 16px;
+            display: none;
+        }
+
+        /* Close button */
+        .close-media {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 45px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-media:hover {
+            color: #ff0800;
+        }
+
+        /* Zoom effect */
+        .media-wrapper.zoomed #modalImg,
+        .media-wrapper.zoomed #modalVid {
+            transform: scale(1.8);
+            cursor: zoom-out;
+        }
+
+        #modalImg,
+        #modalVid {
+            transition: transform 0.4s ease;
+            cursor: zoom-in;
+        }
+
+
+        /* ================= CERTIFICATE SECTION ================= */
+
+        .certificate-section {
+            padding: 100px 8%;
+            background: #00000000;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: "super", sans-serif;
+            font-size: 60px;
+            color: #fff;
+            letter-spacing: 3px;
+            margin-bottom: 60px;
+        }
+
+        .certificate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(450px, 100%), 1fr));
+            gap: 50px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .certificate-card {
+            background: #111;
+            padding: 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.05);
+        }
+
+        .certificate-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            transition: 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+
+            .section-title {
+                font-size: 40px;
+            }
+
+            .certificate-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+        }
+
+        /* ── Hero images: fluid sizing relative to container ── */
+        .base-img,
+        .overlay-img {
+            position: absolute;
+            /* Fill the container at 130% so person extends above/below nicely */
+            width: 130%;
+            height: auto;
+            object-fit: contain;
+            object-position: bottom center;
+            left: 50%;
+            top: -12%;
+            transform: translateX(-50%);
+        }
+
+        .base-img {
+            z-index: 1;
+        }
+
+
+        /* Tablet */
+        @media (max-width: 768px) {
+
+            .base-img,
+            .overlay-img {
+                width: 140%;
+                top: -8%;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+
+            .base-img,
+            .overlay-img {
+                width: 150%;
+                top: -5%;
+            }
+        }
+
+        .overlay-img {
+            background-color: #0a0a0a;
+            clip-path: circle(0px at 50% 50%);
+            z-index: 3;
+        }
+
+        /* CURSOR */
+        .circle-overlay {
+            --circle-size: 180px;
+            position: fixed;
+            height: var(--circle-size);
+            width: var(--circle-size);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 40px 8px rgba(255, 8, 0, 0.5);
+            background: radial-gradient(circle at center,
+                    transparent 100%);
+            display: none;
+        }
+
+        /* CLICK BURST */
+        .burst {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff0800;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: burstAnim 0.6s ease-out forwards;
+        }
+
+        @keyframes burstAnim {
+            to {
+                transform: scale(8);
+                opacity: 0;
+            }
+        }
+
+        /* =====================================================
+           REMAINING RESPONSIVE — Consolidated & Deduped
+           ===================================================== */
+
+        /* ---------- Loading Screen ---------- */
+        @media (max-width: 768px) {
+            .loading-logo {
+                width: 125px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .loading-logo {
+                width: 95px;
+            }
+        }
+
+        /* ---------- About / "WORK" heading ---------- */
+        @media (max-width: 1024px) {
+            .about-left h3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-left h3 {
+                font-size: 38px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about-left h3 {
+                font-size: 28px;
+            }
+        }
+
+        /* ---------- Portfolio Section ---------- */
+        @media (max-width: 1024px) {
+            .portfolio-section {
+                padding: 60px 5%;
+            }
+
+            #work-filters {
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-section {
+                padding: 40px 4%;
+            }
+
+            #work-filters {
+                margin-bottom: 30px;
+            }
+
+            .filter-btn {
+                padding: 6px 13px;
+                font-size: 15px;
+                margin: 3px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .portfolio-section {
+                padding: 28px 3%;
+            }
+
+            #work-filters {
+                margin-bottom: 18px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .filter-btn {
+                padding: 5px 11px;
+                font-size: 12px;
+                margin: 0;
+            }
+
+            .card {
+                margin-bottom: 14px;
+                border-radius: 12px;
+            }
+
+            .card-content {
+                padding: 11px;
+            }
+
+            .card-content h3 {
+                font-size: 0.82rem;
+            }
+
+            .card-content p {
+                font-size: 0.72rem;
+            }
+        }
+
+        /* ---------- Certificate Section ---------- */
+        @media (max-width: 1024px) {
+            .certificate-section {
+                padding: 60px 5%;
+            }
+
+            .section-title {
+                font-size: 46px;
+                margin-bottom: 40px;
+            }
+
+            .certificate-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 38px;
+                margin-bottom: 30px;
+            }
+
+            .certificate-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .certificate-section {
+                padding: 36px 3%;
+            }
+
+            .section-title {
+                font-size: 28px;
+                margin-bottom: 22px;
+                letter-spacing: 1px;
+            }
+
+            .certificate-grid {
+                gap: 18px;
+            }
+
+            .certificate-card {
+                padding: 12px;
+                border-radius: 14px;
+            }
+        }
+
+        /* ---------- Contact Popup ---------- */
+        @media (max-width: 768px) {
+            .contact-popup {
+                right: 14px;
+                top: 62px;
+            }
+
+            .contact-card {
+                width: 330px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-popup {
+                right: 50%;
+                transform: translateX(50%);
+                top: 58px;
+            }
+
+            .contact-card {
+                width: 90vw;
+                max-width: 310px;
+                padding: 17px;
+                border-radius: 16px;
+            }
+
+            .contact-card h4 {
+                font-size: 20px;
+            }
+
+            .contact-card h5 {
+                font-size: 18px;
+            }
+
+            .email a {
+                font-size: 14px;
+                word-break: break-all;
+            }
+        }
+
+        /* ---------- Media Modal ---------- */
+        @media (max-width: 768px) {
+            .media-modal {
+                padding: 14px;
+            }
+
+            .close-media {
+                top: 14px;
+                right: 18px;
+                font-size: 34px;
+            }
+
+            #modalImg,
+            #modalVid {
+                max-height: 80vh;
+                border-radius: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .media-modal {
+                padding: 10px;
+            }
+
+            .close-media {
+                top: 10px;
+                right: 13px;
+                font-size: 28px;
+            }
+
+            #modalImg,
+            #modalVid {
+                max-height: 70vh;
+                border-radius: 10px;
+            }
+
+            .media-wrapper.zoomed #modalImg,
+            .media-wrapper.zoomed #modalVid {
+                transform: scale(1.35);
+            }
+        }
+
+        /* ---------- Bottom Social Icon ---------- */
+        @media (max-width: 768px) {
+            .bottom-section {
+                margin-top: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bottom-section {
+                margin-top: 70px;
+            }
+
+            .social-icon {
+                height: 40px;
+                width: 40px;
+                font-size: 1.05rem;
+            }
+        }
+
+        /* ---------- Touch Devices: hide custom cursors ---------- */
+        @media (hover: none) and (pointer: coarse) {
+            * {
+                cursor: auto !important;
+            }
+
+            .circle,
+            .circle-overlay {
+                display: none !important;
+            }
+        }
+
+        /* ================= FOOTER ================= */
+        .site-footer {
+            position: relative;
+            z-index: 6;
+            width: 100%;
+            padding: 28px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 8, 0, 0.35);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+        }
+
+        .site-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ff0800 50%, transparent);
+        }
+
+        .footer-copy {
+            font-family: 'FB', sans-serif;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.92rem;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .footer-copy span {
+            color: #ff0800;
+            font-weight: 600;
+        }
+
+        /* Footer Responsive */
+        @media (max-width: 768px) {
+            .site-footer {
+                padding: 22px 5%;
+                gap: 8px;
+            }
+
+            .footer-copy {
+                font-size: 0.82rem;
+            }
+
+            .site-footer::before {
+                width: 80%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-footer {
+                padding: 18px 4%;
+                gap: 6px;
+            }
+
+            .footer-copy {
+                font-size: 0.76rem;
+                letter-spacing: 0.2px;
+            }
+
+            .site-footer::before {
+                width: 90%;
+            }
+        }
+
+        /* ---------- My Project Section (Dark Theme) ---------- */
+        .project-section-dark {
+            padding: 120px 8%;
+            background-color: #00000000;
+            position: relative;
+            z-index: 6;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .project-section-title {
+            text-align: center;
+            font-family: 'super', sans-serif;
+            font-size: clamp(32px, 5vw, 55px);
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 90px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .project-main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 80px;
+        }
+
+        .project-left-content {
+            flex: 1.2;
+            text-align: left;
+        }
+
+        .project-link-heading {
+            display: inline-block;
+            font-family: 'FB', sans-serif;
+            font-size: clamp(65px, 9vw, 120px);
+            font-weight: 950;
+            color: #ff0800;
+            text-decoration: none;
+            line-height: 0.85;
+            margin-bottom: 35px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .project-link-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 4px;
+            background-color: #ff0800;
+            transition: width 0.4s ease;
+        }
+
+        .project-link-heading:hover {
+            transform: scale(1.05) skewX(-5deg);
+            text-shadow: 0 0 40px rgba(255, 8, 0, 0.8);
+        }
+
+        .project-link-heading:hover::after {
+            width: 100%;
+        }
+
+        .project-description-white {
+            font-family: 'FB', sans-serif;
+            font-size: clamp(21px, 2vw, 30px);
+            line-height: 1.7;
+            color: #ffffff;
+            max-width: 650px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .project-right-card {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .red-project-card {
+            width: 100%;
+            max-width: 580px;
+            aspect-ratio: 1.3 / 1;
+            background: #ff0800;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 25px 60px rgba(255, 8, 0, 0.25);
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .red-project-card img {
+            width: 80%;
+            height: auto;
+            /* Logo now blends perfectly as image and card red match (#ff0800) */
+            transition: transform 0.5s ease;
+        }
+
+        /* --- Project Section Responsive --- */
+        @media (max-width: 1100px) {
+            .project-main-container {
+                gap: 50px;
+            }
+
+            .project-link-heading {
+                font-size: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .project-section-dark {
+                padding: 100px 6%;
+            }
+
+            .project-main-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 60px;
+            }
+
+            .project-left-content {
+                text-align: center;
+                order: 1;
+            }
+
+            .project-right-card {
+                justify-content: center;
+                order: 2;
+                width: 100%;
+            }
+
+            .project-section-title {
+                margin-bottom: 60px;
+                letter-spacing: 10px;
+                font-size: 32px;
+            }
+
+            .project-link-heading {
+                font-size: clamp(60px, 15vw, 90px);
+                margin-bottom: 25px;
+            }
+
+            .project-description-white {
+                margin: 0 auto;
+                font-size: 18px;
+            }
+
+            .red-project-card {
+                aspect-ratio: 1.4 / 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .project-section-dark {
+                padding: 70px 4%;
+            }
+
+            .project-section-title {
+                letter-spacing: 6px;
+                font-size: 24px;
+            }
+
+            .project-link-heading {
+                font-size: 55px;
+            }
+
+            .project-description-white {
+                font-size: 20px;
+            }
+
+            .red-project-card {
+                border-radius: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <img src="Other/Kavy Sign.png" class="loading-logo" alt="Logo">
+    </div>
+    <!--Cursor Effect-->
+    <div class="circle"></div>
+    <div class="circle-overlay"></div>
+    <!-- Simple navbar -->
+    <div class="navbar">
+        <div class="logo" id="logo">Limbasiya Kavy</div>
+        <button id="contactBtn" class="contact-btn">CONTACT</button>
+
+    </div>
+
+    <div id="contactPopup" class="contact-popup">
+        <div class="contact-card">
+            <h4>SAY HI</h4>
+
+            <!-- Clickable Email -->
+            <p class="email">
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=kavylimbasiya78@gmail.com&su=Portfolio%20Inquiry"
+                    class="email-link">
+                    ✉ kavylimbasiya78@gmail.com
+                </a>
+            </p>
+            <h5>FOLLOW ME</h5>
+            <div class="socials">
+                <a href="https://www.instagram.com/kavy_editz001?igsh=MTlmZ2F6OXd6c2lkbg==" target="_blank">
+                    <img src="Icons/instagram.svg">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Some vertical content before horizontal (kept simple for demo) -->
+    <section class="hero" id="hero">
+
+        <div class="hero-content">
+            <div class="hero-image-container" id="heroImageContainer">
+                <img src="Other/myimage.png" class="base-img">
+                <img src="Other/spiderman.png" class="overlay-img" id="overlay">
+            </div>
+            <div class="marquee-wrap">
+                <div class="marquee" id="marquee">
+                    <span class="mtext">portfolio</span>
+                    <span class="mtext">portfolio</span>
+                    <span class="mtext">portfolio</span>
+                    <span class="mtext">portfolio</span>
+                    <span class="mtext">portfolio</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =================== SCROLL SECTIONS =================== -->
+    <!---1 Capcut----->
+    <div class="center-wrapper1">
+        <div class="mask-card1">
+            <div class="mask-text1">
+                <h1><span>1 </span>CAPCUT</h1>
+                <h4>About</h4>
+                <p class="desc1">I create my edited videos using CapCut on mobile.
+                    It helps me turn simple clips into engaging content with smooth transitions, effects, music syncing,
+                    and creative storytelling. I enjoy experimenting with different styles to make each video unique and
+                    eye-catching.</p>
+            </div>
+            <div class="mask-image1">
+                <img src="Other/capcut.png" alt="artwork" />
+            </div>
+        </div>
+    </div>
+    <!---2 Photoshop----->
+    <div class="center-wrapper2">
+        <div class="mask-card2">
+            <div class="mask-text2">
+                <h1><span>2 </span>PHOTOSHOP</h1>
+                <h4>About</h4>
+                <p class="desc2">I design posters and creative visuals using Adobe Photoshop.
+                    From color grading to detailed editing and layout design, I love transforming ideas into clean,
+                    professional, and visually appealing artwork.</p>
+            </div>
+            <div class="mask-image2">
+                <img src="Other/photoshop.png" alt="artwork" />
+            </div>
+        </div>
+    </div>
+    <!---3 After Effects----->
+    <div class="center-wrapper1">
+        <div class="mask-card1">
+            <div class="mask-text1">
+                <h1><span>3 </span>AFTER EFFECTS</h1>
+                <h4>About</h4>
+                <p class="desc1">I’m currently learning Adobe After Effects to level up my motion graphics skills.
+                    I’m exploring animations, transitions, and visual effects to create more dynamic and cinematic
+                    content in the future.</p>
+            </div>
+            <div class="mask-image1">
+                <img src="Other/after-effects.png" alt="artwork" />
+            </div>
+        </div>
+    </div>
+    <!-- ========== HORIZONTAL SCROLL SECTION ========== -->
+    <section class="horizontal">
+        <div class="pin-wrap">
+            <div class="animation-wrap" id="animationWrap">
+                <!-- 6 panels (you asked for 6 images + 3 paragraphs earlier) -->
+                <div class="panel color-l">
+                    <div class="box">
+                        <h3>Every frame tells a story — crafted with precision, creativity, and vision.<br
+                                class="desktop-br">
+                            This portfolio showcases my journey as a Graphics Designer and Video Editor,<br
+                                class="desktop-br">
+                            transforming ideas into powerful visuals that captivate and inspire.</h3>
+                    </div>
+                </div>
+                <div class="panel color-a">
+                    <div class="box"></div>
+                </div>
+                <div class="panel color-b">
+                    <div class="box"></div>
+                </div>
+                <div class="panel color-c">
+                    <div class="box"></div>
+                </div>
+                <div class="panel color-d">
+                    <div class="box"></div>
+                </div>
+                <div class="panel color-e">
+                    <div class="box"></div>
+                </div>
+                <div class="panel color-l">
+                    <div class="box">
+                        <h3>This portfolio is a creative space for visual storytelling — where ideas evolve into<br
+                                class="desktop-br">
+                            designs, and every frame captures purpose and passion.</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Idea 1280x1440-->
+    <section id="sketchten-card"
+        style="display:flex;justify-content:center;align-items:center;background:#11111100;padding:60px 0;">
+        <div class="card">
+            <div class="photo-box">
+                <img src="Other/myimage1.jpg" alt="Your Photo">
+            </div>
+
+            <div class="right">
+                <div class="line1">Hi! I’m<br>
+                    <span class="brand">Limbasiya Kavy</span>
+                </div>
+
+                <div class="lower">
+                    <h1>About Me</h1><br>
+                    <h2>18-year-old Graphic Designer & Video Editor based in Rajkot, Gujarat, India.<br><br>
+                        I create visually impactful designs and engaging edits that blend creativity with precision.
+                        Passionate about transforming ideas into powerful visual experiences.
+                    </h2>
+                </div>
+            </div>
+            <img src="Other/Kavy Sign.png" alt="signature" class="signature" />
+        </div>
+    </section>
+
+
+    <!-- CERTIFICATES SECTION -->
+    <section class="certificate-section">
+        <h2 class="section-title">CERTIFICATES</h2>
+
+        <div class="certificate-grid">
+
+            <div class="certificate-card">
+                <img src="Certificate/Certificate 1.jpg" alt="Certificate 1">
+            </div>
+
+            <div class="certificate-card">
+                <img src="Certificate/Certificate 2.png" alt="Certificate 2">
+            </div>
+
+            <div class="certificate-card">
+                <img src="Certificate/Certificate 3.jpg" alt="Certificate 1">
+            </div>
+
+            <div class="certificate-card">
+                <img src="Certificate/Certificate 4.jpg" alt="Certificate 2">
+            </div>
+
+            <div class="certificate-card">
+                <img src="Certificate/Certificate 5.jpg" alt="Certificate 1">
+            </div>
+
+            <div class="certificate-card">
+                <img src="Certificate/Certificate 6.png" alt="Certificate 1">
+            </div>
+
+        </div>
+    </section>
+    <!--------Drawing Section-------->
+    <section class="about-section">
+        <div class="about-left">
+            <h3>HOBBY</h3>
+        </div>
+    </section>
+    <section class="portfolio-section">
+        <main id="work" class="container">
+            <div class="grid">
+
+                <!-- Images -->
+                <div class="card">
+                    <img src="Drawing/1.jpg">
+                    <div class="card-content">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="Drawing/2.jpg">
+                    <div class="card-content">
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="Drawing/3.webp">
+                    <div class="card-content">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="Drawing/4.webp">
+                    <div class="card-content">
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="Drawing/5.webp">
+                    <div class="card-content">
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </section>
+
+    <!----About US----->
+    <section class="about-section">
+        <div class="about-left">
+            <h3>MY WORK</h3>
+        </div>
+    </section>
+
+    <section class="portfolio-section">
+
+        <div id="work-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="PC">PC</button>
+            <button class="filter-btn" data-filter="Mobile">Mobile</button>
+            <button class="filter-btn" data-filter="PC Editing">PC Editing</button>
+            <button class="filter-btn" data-filter="Mobile Editing">Mobile Editing</button>
+        </div>
+
+        <main id="work" class="container">
+            <div class="grid">
+
+                <!-- Images -->
+                <div class="card" data-category="Mobile">
+                    <img src="Images/1.jpg">
+                    <div class="card-content">
+                        <h3>Mclaren F1 Poster</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/2.jpg">
+                    <div class="card-content">
+                        <h3>Rockstar</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/3.jpg">
+                    <div class="card-content">
+                        <h3>Escape</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/4.jpg">
+                    <div class="card-content">
+                        <h3>Michal Jackson</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/5.jpg">
+                    <div class="card-content">
+                        <h3>Strip ART</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/6.jpg">
+                    <div class="card-content">
+                        <h3>Future</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/7.jpg">
+                    <div class="card-content">
+                        <h3>Adam</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/8.jpg">
+                    <div class="card-content">
+                        <h3>Your Beauti</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/9.jpg">
+                    <div class="card-content">
+                        <h3>Soilder</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/10.png">
+                    <div class="card-content">
+                        <h3>Astronaut</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/11.jpg">
+                    <div class="card-content">
+                        <h3>Chase Your Dream</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/12.jpg">
+                    <div class="card-content">
+                        <h3>In To Deep</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/13.jpg">
+                    <div class="card-content">
+                        <h3>Nature</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile">
+                    <img src="Images/14.jpg">
+                    <div class="card-content">
+                        <h3>Time is ART & ART is beauty</h3>
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="PC">
+                    <img src="Images/15.jpg">
+                    <div class="card-content">
+                        <h3>Burger & Pizza</h3>
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="PC">
+                    <img src="Images/16.jpg">
+                    <div class="card-content">
+                        <h3>Redeyes</h3>
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="PC">
+                    <img src="Images/17.jpg">
+                    <div class="card-content">
+                        <h3>Spider man</h3>
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="PC">
+                    <img src="Images/18.jpg">
+                    <div class="card-content">
+                        <h3>Snow Board Man</h3>
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="PC">
+                    <img src="Images/19.jpg">
+                    <div class="card-content">
+                        <h3>Max Verstappen</h3>
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
+                <!-- Videos -->
+
+                <div class="card" data-category="Mobile Editing">
+
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/1.mp4" type="video/mp4">
+                    </video>
+
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/2.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/3.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/4.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/5.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/6.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/7.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/8.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/9.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/10.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/11.mp4" type="video/mp4">
+                    </video>
+
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/12.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/13.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/14.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/15.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/16.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/17.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/18.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/19.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/20.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/21.mp4" type="video/mp4">
+                    </video>
+
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/22.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/23.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/24.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+
+                <div class="card" data-category="Mobile Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/25.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#Mobile</p>
+                    </div>
+                </div>
+                <div class="card" data-category="PC Editing">
+                    <video class="portfolio-video" autoplay muted loop playsinline>
+                        <source src="Video/26.mp4" type="video/mp4">
+                    </video>
+                    <div class="card-content">
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </section>
+
+    <script>
+        /*--------Loading Page--------------*/
+        window.addEventListener('load', () => {
+            const loader = document.querySelector('.loading-screen');
+            loader.style.animation = 'fadeOut 1.2s forwards';
+            setTimeout(() => { loader.style.display = 'none'; }, 1200);
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            /* ---------- Velocity intro animations ---------- */
+            Velocity(document.querySelector(".navbar"), { opacity: 1 }, { duration: 1000 });
+
+            const exploreEl = document.querySelector(".explore");
+            if (exploreEl) Velocity(exploreEl, { opacity: 1, translateY: "0px" }, { duration: 1200, delay: 1200 });
+            const bottomEl = document.querySelector(".bottom-section");
+            if (bottomEl) Velocity(bottomEl, { opacity: 1 }, { duration: 1200, delay: 1500 });
+
+            /* ---------- Marquee ---------- */
+            const marquee = document.getElementById("marquee");
+            let pos = 0;
+            function animateMarquee() {
+                pos -= 1.2;
+                marquee.style.transform = `translateX(${pos}px)`;
+                if (Math.abs(pos) >= marquee.scrollWidth / 2) pos = 0;
+                requestAnimationFrame(animateMarquee);
+            }
+            animateMarquee();
+
+            /* ---------- Cherub float ---------- */
+            function floatCherub(el, range, dur) {
+                const x = Math.random() * range - range / 2;
+                const y = Math.random() * range - range / 2;
+                Velocity(el, { translateX: x, translateY: y }, {
+                    duration: dur,
+                    easing: "easeInOutSine",
+                    complete: () => floatCherub(el, range, dur)
+                });
+            }
+            document.querySelectorAll(".cherub").forEach((el, i) => {
+                floatCherub(el, 40 + i * 10, 4000 + i * 500);
+            });
+
+            /* ---------- GSAP horizontal scroll ---------- */
+            gsap.registerPlugin(ScrollTrigger);
+            const animationWrap = document.getElementById("animationWrap");
+            const horizontalSection = document.querySelector(".horizontal");
+
+            function setupHorizontal() {
+                const totalWidth = animationWrap.scrollWidth;
+                const viewport = window.innerWidth;
+                const travel = totalWidth - viewport;
+                ScrollTrigger.getAll().forEach(st => {
+                    if (st.trigger && st.trigger.classList && st.trigger.classList.contains('horizontal')) {
+                        st.kill();
+                    }
+                });
+                if (travel <= 0) return;
+                gsap.to(animationWrap, {
+                    x: -travel,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: horizontalSection,
+                        start: "top top",
+                        end: () => "+=" + travel,
+                        scrub: 0.8,
+                        pin: true,
+                        invalidateOnRefresh: true,
+                        anticipatePin: 1,
+                        onEnter: () => gsap.to(".bg-video", { opacity: 0, duration: 0.6, overwrite: true }),
+                        onEnterBack: () => gsap.to(".bg-video", { opacity: 0, duration: 0.6, overwrite: true }),
+                        onLeave: () => gsap.to(".bg-video", { opacity: 1, duration: 0.6, overwrite: true }),
+                        onLeaveBack: () => gsap.to(".bg-video", { opacity: 1, duration: 0.6, overwrite: true }),
+                    }
+                });
+            }
+            setupHorizontal();
+            window.addEventListener("resize", () => {
+                clearTimeout(window._hsResize);
+                window._hsResize = setTimeout(() => {
+                    ScrollTrigger.refresh(true);
+                    setupHorizontal();
+                }, 120);
+            });
+
+            // ---- DOM references ----
+            const heroSection = document.getElementById("hero");
+            const overlayImg = document.getElementById("overlay");
+            const heroCursorEl = document.querySelector(".circle-overlay");
+            const normalCursorEl = document.querySelector(".circle");
+
+            // ---- HERO cursor state ----
+            const heroMouse = { x: 0, y: 0 };
+            const heroPrevMouse = { x: 0, y: 0 };
+            const heroCircle = { x: 0, y: 0 };
+            const heroSpeed = 0.17;
+            let heroScale = 0;
+            let heroAngle = 0;
+
+            // ---- NORMAL cursor state ----
+            const normalMouse = { x: 0, y: 0 };
+            const normalPrevMouse = { x: 0, y: 0 };
+            const normalCircle = { x: 0, y: 0 };
+            const normalSpeed = 0.17;
+            let normalScale = 0;
+            let normalAngle = 0;
+
+            // ---- Track which cursor zone the mouse is in ----
+            let isInsideHero = false;
+
+            // ---- Single mousemove listener feeds BOTH systems ----
+            window.addEventListener("mousemove", (e) => {
+                heroMouse.x = e.clientX;
+                heroMouse.y = e.clientY;
+                normalMouse.x = e.clientX;
+                normalMouse.y = e.clientY;
+            });
+
+            // ---- Single unified animation loop ----
+            function cursorTick() {
+
+                // Detect if mouse is inside .hero section
+                if (heroSection) {
+                    const heroRect = heroSection.getBoundingClientRect();
+                    isInsideHero = (
+                        heroMouse.x >= heroRect.left &&
+                        heroMouse.x <= heroRect.right &&
+                        heroMouse.y >= heroRect.top &&
+                        heroMouse.y <= heroRect.bottom
+                    );
+                }
+
+                // Get hero image container for relative positioning
+                const heroImgContainer = document.getElementById("heroImageContainer");
+
+                if (isInsideHero) {
+                    /* ===== HERO CURSOR ACTIVE (matches reference exactly) ===== */
+                    heroCursorEl.style.display = "block";
+                    normalCursorEl.style.display = "none";
+
+                    // Smooth follow
+                    heroCircle.x += (heroMouse.x - heroCircle.x) * heroSpeed;
+                    heroCircle.y += (heroMouse.y - heroCircle.y) * heroSpeed;
+
+                    // Position cursor centered on the tracked point
+                    const cursorSize = 180;
+                    const heroTranslate = `translate(${heroCircle.x - cursorSize / 2}px, ${heroCircle.y - cursorSize / 2}px)`;
+
+                    // Velocity-based squeeze
+                    const hdx = heroMouse.x - heroPrevMouse.x;
+                    const hdy = heroMouse.y - heroPrevMouse.y;
+                    heroPrevMouse.x = heroMouse.x;
+                    heroPrevMouse.y = heroMouse.y;
+
+                    const heroVelocity = Math.min(Math.sqrt(hdx ** 2 + hdy ** 2) * 4, 150);
+                    const heroScaleVal = (heroVelocity / 150) * 0.5;
+                    heroScale += (heroScaleVal - heroScale) * heroSpeed;
+                    const heroScaleStr = `scale(${1 + heroScale}, ${1 - heroScale})`;
+
+                    // Rotation based on movement direction
+                    const heroAng = Math.atan2(hdy, hdx) * 180 / Math.PI;
+                    if (heroVelocity > 20) heroAngle = heroAng;
+                    const heroRotateStr = `rotate(${heroAngle}deg)`;
+
+                    // Apply combined transform
+                    heroCursorEl.style.transform = `${heroTranslate} ${heroRotateStr} ${heroScaleStr}`;
+
+                    // Liquid reveal overlay image via clip-path
+                    // Calculate relative to the actual image position (1000px wide, centered with translateX(-50%))
+                    if (overlayImg && heroImgContainer) {
+                        const imgRect = overlayImg.getBoundingClientRect();
+                        const relX = heroCircle.x - imgRect.left;
+                        const relY = heroCircle.y - imgRect.top;
+                        overlayImg.style.clipPath =
+                            `circle(90px at ${relX}px ${relY}px)`;
+                    }
+
+                } else {
+                    /* ===== NORMAL CURSOR ACTIVE ===== */
+                    heroCursorEl.style.display = "none";
+                    normalCursorEl.style.display = "block";
+
+                    // Hide overlay reveal
+                    if (overlayImg && heroImgContainer) {
+                        const containerRect = heroImgContainer.getBoundingClientRect();
+                        const relX = heroCircle.x - containerRect.left;
+                        const relY = heroCircle.y - containerRect.top;
+                        overlayImg.style.clipPath = `circle(0px at ${relX}px ${relY}px)`;
+                    }
+
+                    // Smooth follow
+                    normalCircle.x += (normalMouse.x - normalCircle.x) * normalSpeed;
+                    normalCircle.y += (normalMouse.y - normalCircle.y) * normalSpeed;
+                    const translateStr = `translate(${normalCircle.x}px, ${normalCircle.y}px)`;
+
+                    // Velocity-based squeeze
+                    const dxN = normalMouse.x - normalPrevMouse.x;
+                    const dyN = normalMouse.y - normalPrevMouse.y;
+                    normalPrevMouse.x = normalMouse.x;
+                    normalPrevMouse.y = normalMouse.y;
+
+                    const velocity = Math.min(Math.sqrt(dxN ** 2 + dyN ** 2) * 4, 150);
+                    const scaleVal = (velocity / 150) * 0.5;
+                    normalScale += (scaleVal - normalScale) * normalSpeed;
+                    const scaleStr = `scale(${1 + normalScale}, ${1 - normalScale})`;
+
+                    // Rotation based on movement direction
+                    const ang = Math.atan2(dyN, dxN) * 180 / Math.PI;
+                    if (velocity > 20) normalAngle = ang;
+                    const rotateStr = `rotate(${normalAngle}deg)`;
+
+                    // Apply combined transform
+                    normalCursorEl.style.transform = `${translateStr} ${rotateStr} ${scaleStr}`;
+                }
+
+                requestAnimationFrame(cursorTick);
+            }
+            // Kick off the single cursor loop
+            cursorTick();
+
+            /* ---------- Click burst effect ---------- */
+            window.addEventListener("click", (e) => {
+                const burst = document.createElement("div");
+                burst.classList.add("burst");
+                burst.style.left = (e.clientX - 10) + "px";
+                burst.style.top = (e.clientY - 10) + "px";
+                document.body.appendChild(burst);
+                setTimeout(() => burst.remove(), 600);
+            });
+
+            /* ---------- Scroll progress bar ---------- */
+            const progress = document.getElementById('progress');
+            const dot = document.querySelector('.scroll-dot');
+            if (progress && dot) {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = document.body.scrollHeight - window.innerHeight;
+                    const scrollPercent = scrollTop / docHeight;
+                    progress.style.height = `${scrollPercent * 100}%`;
+                    const maxMove = window.innerHeight - dot.offsetHeight;
+                    dot.style.top = `${scrollPercent * maxMove}px`;
+                });
+            }
+
+            /* ---------- About section GSAP animation ---------- */
+            gsap.from(".about-left h2, .about-left p", {
+                opacity: 0,
+                y: 40,
+                duration: 4,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: ".about-section",
+                    start: "top 80%"
+                }
+            });
+
+            /* ---------- Portfolio filter ---------- */
+            const filterButtons = document.querySelectorAll(".filter-btn");
+            const cards = document.querySelectorAll("#work-filters ~ main .grid .card");
+            filterButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const filterValue = this.getAttribute("data-filter");
+                    filterButtons.forEach(btn => btn.classList.remove("active"));
+                    this.classList.add("active");
+                    cards.forEach(card => {
+                        const category = card.getAttribute("data-category");
+                        if (filterValue === "all" || category === filterValue) {
+                            card.classList.remove("hide");
+                        } else {
+                            card.classList.add("hide");
+                        }
+                    });
+                });
+            });
+
+            /* ---------- Contact popup ---------- */
+            const contactBtn = document.getElementById("contactBtn");
+            const contactPopup = document.getElementById("contactPopup");
+            contactBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                contactPopup.classList.toggle("active");
+            });
+            document.addEventListener("click", function (e) {
+                if (!contactPopup.contains(e.target) && e.target !== contactBtn) {
+                    contactPopup.classList.remove("active");
+                }
+            });
+
+            /* ---------- Media modal interactions ---------- */
+            const gridMedia = document.querySelectorAll(".grid .card img, .grid .card video, .certificate-card img");
+            const mediaModal = document.getElementById("mediaModal");
+            const modalImg = document.getElementById("modalImg");
+            const modalVid = document.getElementById("modalVid");
+            const closeMedia = document.querySelector(".close-media");
+            const mediaWrapper = document.querySelector(".media-wrapper");
+
+            let pressTimer;
+            let isLongPress = false;
+            let isZoomed = false;
+
+            gridMedia.forEach(media => {
+                const startHandler = () => {
+                    isLongPress = false;
+                    pressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        openModal(media);
+                    }, 600);
+                };
+                const endHandler = (e) => {
+                    clearTimeout(pressTimer);
+                    if (!isLongPress && e.type !== 'mouseleave') {
+                        if (media.tagName === "VIDEO") {
+                            media.muted = !media.muted;
+                        }
+                    }
+                };
+                media.addEventListener("mousedown", startHandler);
+                media.addEventListener("mouseup", endHandler);
+                media.addEventListener("mouseleave", () => clearTimeout(pressTimer));
+                media.addEventListener("touchstart", startHandler, { passive: true });
+                media.addEventListener("touchend", endHandler, { passive: true });
+            });
+
+            function openModal(media) {
+                mediaModal.classList.add("active");
+                if (media.tagName === "IMG") {
+                    modalImg.style.display = "block";
+                    modalVid.style.display = "none";
+                    modalImg.src = media.src;
+                } else if (media.tagName === "VIDEO") {
+                    modalVid.style.display = "block";
+                    modalImg.style.display = "none";
+                    const source = media.querySelector("source");
+                    modalVid.src = source ? source.src : media.src;
+                    modalVid.currentTime = 0;
+                    modalVid.muted = true;
+                    modalVid.play();
+                }
+            }
+
+            [modalImg, modalVid].forEach(content => {
+                if (!content) return;
+                const startHandler = () => {
+                    isLongPress = false;
+                    pressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        mediaWrapper.classList.toggle("zoomed");
+                        isZoomed = mediaWrapper.classList.contains("zoomed");
+                    }, 600);
+                };
+                const endHandler = (e) => {
+                    clearTimeout(pressTimer);
+                    if (!isLongPress && e.type !== 'mouseleave') {
+                        handleSideClick(e);
+                    }
+                };
+                content.addEventListener("mousedown", startHandler);
+                content.addEventListener("mouseup", endHandler);
+                content.addEventListener("mouseleave", () => clearTimeout(pressTimer));
+                content.addEventListener("touchstart", startHandler, { passive: true });
+                content.addEventListener("touchend", endHandler, { passive: true });
+            });
+
+            function handleSideClick(e) {
+                const clientX = e.clientX || (e.changedTouches ? e.changedTouches[0].clientX : 0);
+                const screenWidth = window.innerWidth;
+                const sideMargin = screenWidth * 0.3;
+                if (clientX < sideMargin || clientX > (screenWidth - sideMargin)) {
+                    if (isZoomed) {
+                        mediaWrapper.classList.remove("zoomed");
+                        isZoomed = false;
+                    } else {
+                        closeModal();
+                    }
+                }
+            }
+
+            function closeModal() {
+                mediaModal.classList.remove("active");
+                modalVid.pause();
+                modalVid.src = "";
+                mediaWrapper.classList.remove("zoomed");
+                isZoomed = false;
+            }
+
+            if (closeMedia) closeMedia.addEventListener("click", closeModal);
+            if (mediaModal) {
+                mediaModal.addEventListener("click", (e) => {
+                    if (e.target === mediaModal && !isZoomed) closeModal();
+                });
+            }
+
+        }); // end DOMContentLoaded
+    </script>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer">
+        <p class="footer-copy">&copy; 2026 <span>Limbasiya Kavy</span>. All rights reserved.</p>
+    </footer>
+
+    <!-- ===== MEDIA VIEWER MODAL ===== -->
+    <div id="mediaModal" class="media-modal">
+        <span class="close-media">&times;</span>
+
+        <div class="media-wrapper">
+            <img id="modalImg" />
+            <video id="modalVid" controls></video>
+        </div>
+    </div>
+
+</body>
+
+</html>
