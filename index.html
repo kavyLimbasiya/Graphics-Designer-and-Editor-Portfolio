@@ -2050,12 +2050,12 @@
             text-align: left;
         }
 
-        .project-link-heading {
+        .project-link-heading-Noiryx {
             display: inline-block;
             font-family: 'FB', sans-serif;
             font-size: clamp(65px, 9vw, 120px);
             font-weight: 950;
-            color: #ff0800;
+            color: #ae00ffbe;
             text-decoration: none;
             line-height: 0.85;
             margin-bottom: 35px;
@@ -2065,23 +2065,23 @@
             position: relative;
         }
 
-        .project-link-heading::after {
+        .project-link-heading-Noiryx::after {
             content: '';
             position: absolute;
             left: 0;
             bottom: -5px;
             width: 0;
             height: 4px;
-            background-color: #ff0800;
+            background-color: #ae00ffbe;
             transition: width 0.4s ease;
         }
 
-        .project-link-heading:hover {
+        .project-link-heading-Noiryx:hover {
             transform: scale(1.05) skewX(-5deg);
-            text-shadow: 0 0 40px rgba(255, 8, 0, 0.8);
+            text-shadow: 0 0 40px rgba(140, 0, 255, 0.774);
         }
 
-        .project-link-heading:hover::after {
+        .project-link-heading-Noiryx:hover::after {
             width: 100%;
         }
 
@@ -2095,27 +2095,27 @@
             font-weight: 300;
         }
 
-        .project-right-card {
+        .project-right-card-Noiryx {
             flex: 1;
             display: flex;
             justify-content: flex-end;
         }
 
-        .red-project-card {
+        .purple-project-card-Noiryx {
             width: 100%;
             max-width: 580px;
             aspect-ratio: 1.3 / 1;
-            background: #ff0800;
+            background: #0a0a0a;
             border-radius: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 25px 60px rgba(255, 8, 0, 0.25);
+            box-shadow: 0 25px 60px rgba(174, 0, 255, 0.25);
             transition: all 0.5s ease;
             position: relative;
         }
 
-        .red-project-card img {
+        .purple-project-card-Noiryx img {
             width: 80%;
             height: auto;
             /* Logo now blends perfectly as image and card red match (#ff0800) */
@@ -2128,7 +2128,7 @@
                 gap: 50px;
             }
 
-            .project-link-heading {
+            .project-link-heading-Noiryx {
                 font-size: 80px;
             }
         }
@@ -2149,7 +2149,7 @@
                 order: 1;
             }
 
-            .project-right-card {
+            .project-right-card-Noiryx {
                 justify-content: center;
                 order: 2;
                 width: 100%;
@@ -2161,7 +2161,7 @@
                 font-size: 32px;
             }
 
-            .project-link-heading {
+            .project-link-heading-Noiryx {
                 font-size: clamp(60px, 15vw, 90px);
                 margin-bottom: 25px;
             }
@@ -2171,7 +2171,7 @@
                 font-size: 18px;
             }
 
-            .red-project-card {
+            .purple-project-card-Noiryx {
                 aspect-ratio: 1.4 / 1;
             }
         }
@@ -2186,7 +2186,7 @@
                 font-size: 24px;
             }
 
-            .project-link-heading {
+            .project-link-heading-Noiryx {
                 font-size: 55px;
             }
 
@@ -2194,7 +2194,7 @@
                 font-size: 20px;
             }
 
-            .red-project-card {
+            .purple-project-card-Noiryx {
                 border-radius: 20px;
             }
         }
@@ -2400,10 +2400,32 @@
 
         </div>
     </section>
+
+    <!-- NEW PROJECT SECTION: SKETCHTEN (Dark Theme) -->
+    <section class="project-section-dark" id="sketchten">
+        <h2 class="project-section-title">my project</h2>
+        <div class="project-main-container">
+            <div class="project-left-content">
+                <a href="https://kavylimbasiya.github.io/Noiryx.com/" target="_blank"
+                    class="project-link-heading-Noiryx">NOIRYX</a>
+                <p class="project-description-white">
+                    Noiryx is a sleek wallpaper platform designed to deliver high-quality, aesthetic backgrounds. It
+                    offers a curated collection of images across different styles, allowing users to personalize their
+                    screens with visually stunning and modern wallpapers.
+                </p>
+            </div>
+            <div class="project-right-card-Noiryx">
+                <div class="purple-project-card-Noiryx">
+                    <img src="Project/Noiryx.jpg" alt="Noiryx Logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!--------Drawing Section-------->
     <section class="about-section">
         <div class="about-left">
-            <h3>HOBBY</h3>
+            <h3>PERSONAL WORK</h3>
         </div>
     </section>
     <section class="portfolio-section">
@@ -2447,7 +2469,7 @@
     <!----About US----->
     <section class="about-section">
         <div class="about-left">
-            <h3>MY WORK</h3>
+            <h3>WORK</h3>
         </div>
     </section>
 
