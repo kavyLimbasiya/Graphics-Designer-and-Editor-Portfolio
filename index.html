@@ -15,6 +15,7 @@
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <style>
         @font-face {
             /*-----Description-----*/
@@ -537,6 +538,7 @@
         .center-wrapper1,
         .center-wrapper2,
         .center-wrapper3 {
+
             min-height: 350px;
             height: auto;
             display: flex;
@@ -853,10 +855,6 @@
             border: 2px solid #ff0800;
         }
 
-        /* Helper: hide desktop line-breaks on mobile */
-        .desktop-br {
-            display: inline;
-        }
 
         /* ---------- Horizontal Scroll Panels ---------- */
 
@@ -891,9 +889,6 @@
                 line-height: 1.6;
             }
 
-            .desktop-br {
-                display: none;
-            }
         }
 
         @media (max-width: 480px) {
@@ -2045,6 +2040,11 @@
             gap: 80px;
         }
 
+        .project-main-container+.project-main-container {
+            margin-top: 100px;
+            /* Space between projects */
+        }
+
         .project-left-content {
             flex: 1.2;
             text-align: left;
@@ -2122,6 +2122,97 @@
             transition: transform 0.5s ease;
         }
 
+        /* ----- Sketchten Project Styles ----- */
+        .project-link-heading-Sketchten {
+            display: inline-block;
+            font-family: 'FB', sans-serif;
+            font-size: clamp(65px, 9vw, 120px);
+            font-weight: 950;
+            color: #FF0800;
+            text-decoration: none;
+            line-height: 0.85;
+            margin-bottom: 35px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .project-link-heading-Sketchten::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 4px;
+            background-color: #FF0800;
+            transition: width 0.4s ease;
+        }
+
+        .project-link-heading-Sketchten:hover {
+            transform: scale(1.05) skewX(-5deg);
+            text-shadow: 0 0 40px rgba(255, 8, 0, 0.774);
+        }
+
+        .project-link-heading-Sketchten:hover::after {
+            width: 100%;
+        }
+
+        .project-right-card-Sketchten {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .purple-project-card-Sketchten {
+            width: 100%;
+            max-width: 580px;
+            aspect-ratio: 1.3 / 1;
+            background: #ff0800;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 25px 60px rgba(255, 8, 0, 0.25);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .purple-project-card-Sketchten video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30px;
+            display: block;
+            background: #ff0800;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .purple-project-card-Sketchten.playing video {
+            opacity: 1;
+        }
+
+        .sketchten-thumbnail {
+
+            position: absolute;
+            width: 80%;
+            height: auto;
+            transition: all 0.5s ease;
+            z-index: 3;
+        }
+
+        .sketchten-video {
+            background: #FF0800;
+        }
+
+        .purple-project-card-Sketchten.playing .sketchten-thumbnail {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         /* --- Project Section Responsive --- */
         @media (max-width: 1100px) {
             .project-main-container {
@@ -2129,6 +2220,10 @@
             }
 
             .project-link-heading-Noiryx {
+                font-size: 80px;
+            }
+
+            .project-link-heading-Sketchten {
                 font-size: 80px;
             }
         }
@@ -2155,6 +2250,12 @@
                 width: 100%;
             }
 
+            .project-right-card-Sketchten {
+                justify-content: center;
+                order: 2;
+                width: 100%;
+            }
+
             .project-section-title {
                 margin-bottom: 60px;
                 letter-spacing: 10px;
@@ -2166,12 +2267,21 @@
                 margin-bottom: 25px;
             }
 
+            .project-link-heading-Sketchten {
+                font-size: clamp(60px, 15vw, 90px);
+                margin-bottom: 25px;
+            }
+
             .project-description-white {
                 margin: 0 auto;
                 font-size: 18px;
             }
 
             .purple-project-card-Noiryx {
+                aspect-ratio: 1.4 / 1;
+            }
+
+            .purple-project-card-Sketchten {
                 aspect-ratio: 1.4 / 1;
             }
         }
@@ -2190,11 +2300,19 @@
                 font-size: 55px;
             }
 
+            .project-link-heading-Sketchten {
+                font-size: 55px;
+            }
+
             .project-description-white {
                 font-size: 20px;
             }
 
             .purple-project-card-Noiryx {
+                border-radius: 20px;
+            }
+
+            .purple-project-card-Sketchten {
                 border-radius: 20px;
             }
         }
@@ -2262,7 +2380,8 @@
             <div class="mask-text1">
                 <h1><span>1 </span>CAPCUT</h1>
                 <h4>About</h4>
-                <p class="desc1">I create my edited videos using CapCut on mobile.
+                <p class="desc1 text" style="color:rgba(255,255,255,0.15);">I create my edited videos using CapCut on
+                    mobile.
                     It helps me turn simple clips into engaging content with smooth transitions, effects, music syncing,
                     and creative storytelling. I enjoy experimenting with different styles to make each video unique and
                     eye-catching.</p>
@@ -2278,7 +2397,8 @@
             <div class="mask-text2">
                 <h1><span>2 </span>PHOTOSHOP</h1>
                 <h4>About</h4>
-                <p class="desc2">I design posters and creative visuals using Adobe Photoshop.
+                <p class="desc2 text" style="color:rgba(255,255,255,0.15);">I design posters and creative visuals using
+                    Adobe Photoshop.
                     From color grading to detailed editing and layout design, I love transforming ideas into clean,
                     professional, and visually appealing artwork.</p>
             </div>
@@ -2293,7 +2413,8 @@
             <div class="mask-text1">
                 <h1><span>3 </span>AFTER EFFECTS</h1>
                 <h4>About</h4>
-                <p class="desc1">I’m currently learning Adobe After Effects to level up my motion graphics skills.
+                <p class="desc1 text" style="color:rgba(255,255,255,0.15);">I’m currently learning Adobe After Effects
+                    to level up my motion graphics skills.
                     I’m exploring animations, transitions, and visual effects to create more dynamic and cinematic
                     content in the future.</p>
             </div>
@@ -2309,10 +2430,8 @@
                 <!-- 6 panels (you asked for 6 images + 3 paragraphs earlier) -->
                 <div class="panel color-l">
                     <div class="box">
-                        <h3>Every frame tells a story — crafted with precision, creativity, and vision.<br
-                                class="desktop-br">
-                            This portfolio showcases my journey as a Graphics Designer and Video Editor,<br
-                                class="desktop-br">
+                        <h3>Every frame tells a story — crafted with precision, creativity, and vision.
+                            This portfolio showcases my journey as a Graphics Designer and Video Editor,
                             transforming ideas into powerful visuals that captivate and inspire.</h3>
                     </div>
                 </div>
@@ -2333,8 +2452,7 @@
                 </div>
                 <div class="panel color-l">
                     <div class="box">
-                        <h3>This portfolio is a creative space for visual storytelling — where ideas evolve into<br
-                                class="desktop-br">
+                        <h3>This portfolio is a creative space for visual storytelling — where ideas evolve into\
                             designs, and every frame captures purpose and passion.</h3>
                     </div>
                 </div>
@@ -2351,15 +2469,15 @@
             </div>
 
             <div class="right">
-                <div class="line1">Hi! I’m<br>
+                <div class="line1">Hi! I'm<br>
                     <span class="brand">Limbasiya Kavy</span>
                 </div>
 
                 <div class="lower">
                     <h1>About Me</h1><br>
-                    <h2>18-year-old Graphic Designer & Video Editor based in Rajkot, Gujarat, India.<br><br>
+                    <h2>19-year-old Graphic Designer &amp; Video Editor based in Rajkot, Gujarat, India.<br><br>
                         I create visually impactful designs and engaging edits that blend creativity with precision.
-                        Passionate about transforming ideas into powerful visual experiences.
+                        Passionate about transforming ideas into powerful visual experiences
                     </h2>
                 </div>
             </div>
@@ -2402,6 +2520,7 @@
     </section>
 
     <!-- NEW PROJECT SECTION: SKETCHTEN (Dark Theme) -->
+    <!-- Noiryx Project -->
     <section class="project-section-dark" id="sketchten">
         <h2 class="project-section-title">my project</h2>
         <div class="project-main-container">
@@ -2417,6 +2536,24 @@
             <div class="project-right-card-Noiryx">
                 <div class="purple-project-card-Noiryx">
                     <img src="Project/Noiryx.jpg" alt="Noiryx Logo">
+                </div>
+            </div>
+        </div>
+
+        <div class="project-main-container">
+            <div class="project-left-content">
+                <a href="https://sketchten.com/" target="_blank" class="project-link-heading-Sketchten">SKETCHTEN</a>
+                <p class="project-description-white">
+                    Sketchten is a modern platform designed for visual artists to showcase their creativity, connect
+                    with audiences, and gain recognition. It features artist profiles, artwork galleries, and
+                    community-driven rankings that help creators grow and reach a wider audience.
+                    <span style="color: #FF0800;">The platform where artists evolve.</span>
+                </p>
+            </div>
+            <div class="project-right-card-Sketchten">
+                <div class="purple-project-card-Sketchten">
+                    <video id="sketchten-video" src="Project/Sketchten.mp4" playsinline loop></video>
+                    <img class="sketchten-thumbnail" src="Project/Sketchten.jpg" alt="Sketchten Logo">
                 </div>
             </div>
         </div>
@@ -2472,7 +2609,6 @@
             <h3>WORK</h3>
         </div>
     </section>
-
     <section class="portfolio-section">
 
         <div id="work-filters">
@@ -2639,6 +2775,14 @@
                     </div>
                 </div>
 
+                <div class="card" data-category="PC">
+                    <img src="Images/20.jpg">
+                    <div class="card-content">
+                        <h3>Glitch Strip</h3>
+                        <p class="hashtags">#PC</p>
+                    </div>
+                </div>
+
                 <!-- Videos -->
 
                 <div class="card" data-category="Mobile Editing">
@@ -2800,83 +2944,9 @@
                     </div>
                 </div>
 
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/18.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/19.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/20.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/21.mp4" type="video/mp4">
-                    </video>
-
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/22.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/23.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/24.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
-
-                <div class="card" data-category="Mobile Editing">
-                    <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/25.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-content">
-                        <p class="hashtags">#Mobile</p>
-                    </div>
-                </div>
                 <div class="card" data-category="PC Editing">
                     <video class="portfolio-video" autoplay muted loop playsinline>
-                        <source src="Video/26.mp4" type="video/mp4">
+                        <source src="Video/18.mp4" type="video/mp4">
                     </video>
                     <div class="card-content">
                         <p class="hashtags">#PC</p>
@@ -2889,6 +2959,7 @@
     </section>
 
     <script>
+
         /*--------Loading Page--------------*/
         window.addEventListener('load', () => {
             const loader = document.querySelector('.loading-screen');
@@ -2905,6 +2976,29 @@
             if (exploreEl) Velocity(exploreEl, { opacity: 1, translateY: "0px" }, { duration: 1200, delay: 1200 });
             const bottomEl = document.querySelector(".bottom-section");
             if (bottomEl) Velocity(bottomEl, { opacity: 1 }, { duration: 1200, delay: 1500 });
+
+            gsap.registerPlugin(ScrollTrigger);
+            document.querySelectorAll(".text").forEach((el) => {
+                const words = el.textContent.split(/(\s+)/);
+                el.innerHTML = words.map(word => {
+                    if (word.trim() === "") {
+                        return word;
+                    }
+                    return `<span class="word" style="display: inline-block;">${word}</span>`;
+                }).join("");
+
+                const wordElements = el.querySelectorAll(".word");
+                gsap.to(wordElements, {
+                    color: "#fff",
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                        end: "bottom 55%",
+                        scrub: true
+                    }
+                });
+            });
 
             /* ---------- Marquee ---------- */
             const marquee = document.getElementById("marquee");
@@ -3279,6 +3373,41 @@
                     if (e.target === mediaModal && !isZoomed) closeModal();
                 });
             }
+
+            /* ---------- Sketchten video controls ---------- */
+            const sketchtenVideo = document.getElementById("sketchten-video");
+            const sketchtenCard = document.querySelector(".purple-project-card-Sketchten");
+
+            if (sketchtenVideo && sketchtenCard) {
+                const toggleSketchtenPlay = (e) => {
+                    if (e.target === sketchtenVideo && sketchtenVideo.controls) {
+                        return;
+                    }
+                    if (sketchtenVideo.paused) {
+                        sketchtenVideo.play();
+                    } else {
+                        sketchtenVideo.pause();
+                    }
+                };
+
+                sketchtenCard.addEventListener("click", toggleSketchtenPlay);
+
+                sketchtenVideo.addEventListener("play", () => {
+                    sketchtenCard.classList.add("playing");
+                    sketchtenVideo.controls = true;
+                });
+
+                sketchtenVideo.addEventListener("pause", () => {
+                    sketchtenCard.classList.remove("playing");
+                    sketchtenVideo.controls = false;
+                });
+
+                sketchtenVideo.addEventListener("ended", () => {
+                    sketchtenCard.classList.remove("playing");
+                    sketchtenVideo.controls = false;
+                });
+            }
+
 
         }); // end DOMContentLoaded
     </script>
